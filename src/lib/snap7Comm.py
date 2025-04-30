@@ -11,15 +11,15 @@
 # Author:      Yuancheng Liu
 #
 # Created:     2024/03/21
-# Version:     v_0.1.3
+# Version:     v_0.1.4
 # Copyright:   Copyright (c) 2024 LiuYuancheng
 # License:     MIT License
 #-----------------------------------------------------------------------------
 """ Program Design:
 
-    We want to create a Siemens S7comm communication channel (client + server) lib
-    to read the data from a real PLC/RTU or simulate the PLC/RTU S7comm data handling 
-    process (handle S7commm request from other program).
+    We want to create a Siemens S7Comm communication channel (client + server) lib
+    to read the data from a real PLC/RTU or simulate the PLC/RTU S7Comm data handling 
+    process (handle S7Comm request from other program).
 
     Three components will be provided in this module:
     
@@ -186,7 +186,6 @@ class s7CommClient(object):
             snap7.util.set_int(command, 0, int(data))
         else:
             snap7.util.set_real(command, 0, float(data))
-
         try: 
             rst = self.client.db_write(addressIdx, dataIdx, command)
             self.connected = True
@@ -215,7 +214,7 @@ class s7commServer(object):
             Args:
                 hostIp (str, optional): service host. Defaults to '0.0.0.0'.
                 hostPort (int, optional): service port. Defaults to 102.
-                snapLibPath (_type_, optional): libflie 'snap7.dll' path for Win-OS if 
+                snapLibPath (_type_, optional): lib file 'snap7.dll' path for Win-OS if 
                     the system path is not set. Defaults to None use system path.
         """ 
         self._hostIp = hostIp
@@ -230,7 +229,7 @@ class s7commServer(object):
         #         'dataType':[BOOL_TYPE, INT_TYPE, REAL_TYPE], # parameter type
         #     }
         # }
-        self.runningFlg = False
+        self.runingFlg = False
         self._server = snap7.server.Server()
         if snapLibPath:
             print("s7commServer > Load the Snap7 Win-OS lib-dll file : %s" %str(snapLibPath))
@@ -276,7 +275,7 @@ class s7commServer(object):
 
     #-----------------------------------------------------------------------------
     def isRunning(self):
-        return self.runningFlg
+        return self.runingFlg
 
     def getDBDict(self):
         return self._dbDict
@@ -310,10 +309,10 @@ class s7commServer(object):
         try:
             self.initRegisterArea()
             self._server.start(self._hostPort)
-            self.runningFlg = True
+            self.runingFlg = True
         except Exception as err:
              print("Error: startService() Error to start s7snap server: %s" %str(err))
-             self.runningFlg = False 
+             self.runingFlg = False 
              return None
         # Added the loop to print the event and handle the DB change request.
         while not self.terminate:
@@ -360,7 +359,7 @@ class s7commServer(object):
 
     #-----------------------------------------------------------------------------
     def stopServer(self):
-        self.runningFlg = False
+        self.runingFlg = False
         self.terminate = True
         self._server.stop()
         self._server.destroy()
